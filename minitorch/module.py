@@ -26,18 +26,24 @@ class Module:
 
     def modules(self) -> Sequence[Module]:
         "Return the direct child modules of this module."
-        m: Dict[str, Module] = self.__dict__["_modules"]
+        m: Dict[str, Module] = self._modules
         return list(m.values())
 
     def train(self) -> None:
         "Set the mode of this module and all descendent modules to `train`."
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError('Need to implement for Task 0.4')
+        def update(cur: Module):
+            cur.training = True
+            for c in cur._modules.values():
+                update(c)
+        update(self)
 
     def eval(self) -> None:
         "Set the mode of this module and all descendent modules to `eval`."
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError('Need to implement for Task 0.4')
+        def update(cur: Module):
+            cur.training = False
+            for c in cur._modules.values():
+                update(c)
+        update(self)
 
     def named_parameters(self) -> Sequence[Tuple[str, Parameter]]:
         """
@@ -47,13 +53,28 @@ class Module:
         Returns:
             The name and `Parameter` of each ancestor parameter.
         """
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError('Need to implement for Task 0.4')
+        data = []
+
+        def getter(name: str, node: Module):
+            prefix = name + "." if name else ""
+            for k, v in node._parameters.items():
+                data.append((prefix + k, v))
+            for k, v in node._modules.items():
+                getter(prefix + k, v)
+        getter("", self)
+        return data
 
     def parameters(self) -> Sequence[Parameter]:
         "Enumerate over all the parameters of this module and its descendents."
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError('Need to implement for Task 0.4')
+        data = []
+
+        def getter(node: Module):
+            for v in node._parameters.values():
+                data.append(v)
+            for v in node._modules.values():
+                getter(v)
+        getter(self)
+        return data
 
     def add_parameter(self, k: str, v: Any) -> Parameter:
         """
