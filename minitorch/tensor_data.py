@@ -62,6 +62,7 @@ def to_index(ordinal: int, shape: Shape, out_index: OutIndex) -> None:
         out_index : return index corresponding to position.
 
     """
+    ordinal = ordinal + 0
     for i, v in enumerate(shape):
         out_index[i] = ordinal % v
         ordinal = ordinal // v

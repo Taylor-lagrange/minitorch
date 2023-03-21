@@ -65,7 +65,7 @@ def sigmoid(x: float) -> float:
 
     for stability.
     """
-    return 1 / (1 + exp(-x)) if x >= 0 else exp(x) / (1 + exp(x))
+    return 1 / (1 + np.exp(-x)) if x >= 0 else np.exp(x) / (1 + np.exp(x))
 
 
 def relu(x: float) -> float:
@@ -82,12 +82,12 @@ EPS = 1e-6
 
 def log(x: float) -> float:
     "$f(x) = log(x)$"
-    return math.log(x + EPS)
+    return np.log(x + EPS)
 
 
 def exp(x: float) -> float:
     "$f(x) = e^{x}$"
-    return math.exp(x)
+    return np.exp(x)
 
 
 def log_back(x: float, d: float) -> float:
